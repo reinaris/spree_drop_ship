@@ -1,13 +1,15 @@
-Spree::Order.class_eval do
+module Spree::DropshipOrderDecorator 
 
-  has_many :stock_locations, through: :shipments
-  has_many :suppliers, through: :stock_locations
+  def self.prepended(base)
+    base.has_many :stock_locations, through: :shipments
+    base.has_many :suppliers, through: :stock_locations
+  end
 
   # Once order is finalized we want to notify the suppliers of their drop ship orders.
   # Here we are handling notification by emailing the suppliers.
   # If you want to customize this you could override it as a hook for notifying a supplier with a API request instead.
-  def finalize_with_drop_ship!
-    finalize_without_drop_ship!
+  def finalize!
+    super
     shipments.each do |shipment|
       if SpreeDropShip::Config[:send_supplier_email] && shipment.supplier.present?
         begin
@@ -22,6 +24,7 @@ Spree::Order.class_eval do
       end
     end
   end
-  alias_method_chain :finalize!, :drop_ship
 
 end
+
+Spree::Order.prepend(Spree::DropshipOrderDecorator)
