@@ -4,6 +4,6 @@
   <% if try_spree_current_user && try_spree_current_user.supplier? %>
     <%= link_to product.try(:name), stock_admin_product_path(product) %>
   <% else %>
-    <%= link_to product.try(:name), edit_admin_product_path(product) %>
+    <%= link_to product.try(:name), edit_admin_product_path(product), data: { id: product.id, name: product.try(:name) } %>
   <% end %>
 </td>
