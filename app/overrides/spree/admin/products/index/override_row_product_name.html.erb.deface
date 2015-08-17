@@ -1,6 +1,6 @@
 <!-- replace '[data-hook="admin_products_index_row_product_name"]' -->
 
-<td>
+<td data-hook="admin_products_index_row_product_name">
   <% if try_spree_current_user && try_spree_current_user.supplier? %>
     <%= link_to product.try(:name), stock_admin_product_path(product) %>
   <% else %>
